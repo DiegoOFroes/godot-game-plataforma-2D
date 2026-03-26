@@ -13,6 +13,7 @@ enum PlayerState
 
 @onready var animated: AnimatedSprite2D = $Animated
 @onready var collision: CollisionShape2D = $Collision
+@onready var reload_timer: Timer = $ReloadTimer
 
 @export var max_speed = 150.0
 @export var acceleration = 300.0
@@ -88,6 +89,7 @@ func go_to_hurt_state():
 	playerStatus = PlayerState.hurt
 	animated.play("hurt")
 	velocity = Vector2.ZERO
+	reload_timer.start()
 
 func idle_state(delta):
 	move(delta)
@@ -210,4 +212,8 @@ func _on_hitbox_area_entered(area: Area2D) -> void:
 		go_to_jump_state()
 	else:
 		#player morrer
-		go_to_hurt_state()
+		if playerStatus != PlayerState.hurt:
+			go_to_hurt_state()
+
+func _on_reload_timer_timeout() -> void:
+	get_tree().reload_current_scene()
