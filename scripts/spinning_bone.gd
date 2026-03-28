@@ -1,7 +1,22 @@
 extends Area2D
 
-var speed = 100
+@onready var animated: AnimatedSprite2D = $Animated
+
+var speed = 60
 var direction = 1
 
 func _process(delta: float) -> void:
 	position.x += speed * delta * direction
+
+func set_direction(skeleton_direction):
+	direction = skeleton_direction
+	animated.flip_h = direction < 0
+
+func _on_self_destruct_timeout() -> void:
+	queue_free()
+
+func _on_area_entered(_area: Area2D) -> void:
+	queue_free()
+
+func _on_body_entered(_body: Node2D) -> void:
+	queue_free()
